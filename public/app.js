@@ -2,6 +2,98 @@ const API_URL = 'http://localhost:3000/api';
 let sessionId = localStorage.getItem('sessionId');
 let cart = { items: [], total: 0 };
 
+// Initialize LaunchDarkly
+const LDClient = window.LDClient;
+let ldClient = null;
+
+let emails = ['jdoe@gmail.com', 'test@example.com', 'fmae@government.net', 'jbond@gmail.com'];
+let ldSessionKey = '690952c5a7866609a4281112';
+let email = emails[Math.floor(Math.random() * emails.length)];
+
+async function initializeLaunchDarkly() {
+    if (!sessionId) {
+        await new Promise(resolve => setTimeout(resolve, 100));
+    }
+    
+    const context = {
+        kind: 'user',
+        key: email,
+        anonymous: false,
+        email: email
+    };
+    
+    ldClient = LDClient.initialize(ldSessionKey, context, {
+        inspectors: [
+    {
+      type: "flag-used",
+      name: "dd-inspector",
+      method: (key, detail) => {
+        window.DD_RUM.addFeatureFlagEvaluation(key, detail.value);
+      },
+    },
+  ],
+    } );
+    
+    await ldClient.waitForInitialization();
+    
+    const darkModeEnabled = ldClient.variation('dark-mode', false);
+    applyDarkMode(darkModeEnabled);
+    
+    ldClient.on('change:dark-mode', (newValue) => {
+        applyDarkMode(newValue);
+    });
+    
+    const isTargeted = ldClient.variation('coupon-banner', false);
+    applyCouponBanner(isTargeted);
+    
+    ldClient.on('change:isTargeted', (newValue) => {
+        applyCouponBanner(newValue);
+    });
+
+    console.log(email);
+}
+
+function applyDarkMode(enabled) {
+    if (enabled) {
+        document.body.classList.add('dark-mode');
+    } else {
+        document.body.classList.remove('dark-mode');
+    }
+}
+
+function applyCouponBanner(enabled) {
+    const existingBanner = document.getElementById('couponBanner');
+    
+    if (enabled && !existingBanner) {
+        const banner = document.createElement('div');
+        banner.id = 'couponBanner';
+        banner.style.cssText = `
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            top: 60px;
+            left: 0;
+            right: 0;
+            z-index: 999;
+            animation: slideDown 0.5s ease-out;
+        `;
+        banner.innerHTML = '🎉 Special Offer: Get 20% OFF Your Purchase! 🎉';
+        document.body.insertBefore(banner, document.body.firstChild);
+        
+        document.querySelector('main').style.marginTop = '95px';
+    } else if (!enabled && existingBanner) {
+        existingBanner.remove();
+        document.querySelector('main').style.marginTop = '60px';
+    }
+}
+
+initializeLaunchDarkly();
+
 if (!sessionId) {
     fetch(`${API_URL}/session`)
         .then(res => res.json())
@@ -208,6 +300,10 @@ document.getElementById('checkoutForm').addEventListener('submit', (e) => {
     .then(res => res.json())
     .then(data => {
         if (data.success) {
+            console.log(data);
+
+            ldClient.track('checkout-total', null, data.total);
+
             closeCheckout();
             document.getElementById('orderId').textContent = data.orderId;
             document.getElementById('orderTotal').textContent = `$${data.total.toFixed(2)}`;

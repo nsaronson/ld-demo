@@ -1,10 +1,13 @@
+require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const path = require('path');
 const db = require('./database');
 const crypto = require('crypto');
+const LD = require('@launchdarkly/node-server-sdk');
 
+const ldClient = LD.init(process.env.LD_SDK_KEY);
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -249,4 +252,18 @@ app.get('/api/session', (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`E-commerce server running on http://localhost:${PORT}`);
+});
+
+// A "context" is a data object representing users, devices, organizations, and other entities.
+// You'll need this later, but you can ignore it for now.
+const context = {
+  kind: 'user',
+  key: 'user-key-123abcde',
+  email: 'biz@face.dev',
+};
+
+ldClient.once('ready', function () {
+  // Tracking your memberId lets us know you are connected.
+  ldClient.track('690952c5a7866609a4281111', context);
+  console.log('SDK successfully initialized!');
 });

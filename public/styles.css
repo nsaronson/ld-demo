@@ -384,3 +384,63 @@ main {
         gap: 1rem;
     }
 }
+
+/* Dark Mode Styles */
+body.dark-mode {
+    background: #1a1a1a;
+    color: #e0e0e0;
+}
+
+body.dark-mode header {
+    background: #0d1117;
+}
+
+body.dark-mode #products h2,
+body.dark-mode .product-name,
+body.dark-mode .cart-header h2,
+body.dark-mode .modal-header h2,
+body.dark-mode .form-group label {
+    color: #e0e0e0;
+}
+
+body.dark-mode .product-card,
+body.dark-mode .cart-sidebar,
+body.dark-mode .modal-content {
+    background: #262626;
+    color: #e0e0e0;
+}
+
+body.dark-mode .product-description,
+body.dark-mode .close-btn {
+    color: #a0a0a0;
+}
+
+body.dark-mode .form-group input,
+body.dark-mode .form-group textarea {
+    background: #1a1a1a;
+    border-color: #404040;
+    color: #e0e0e0;
+}
+
+body.dark-mode .checkout-total {
+    background: #1a1a1a;
+}
+
+body.dark-mode .cart-item {
+    border-bottom-color: #404040;
+}
+
+body.dark-mode .cart-header,
+body.dark-mode .cart-footer {
+    border-color: #404040;
+}
+
+body.dark-mode .quantity-btn {
+    background: #1a1a1a;
+    border-color: #404040;
+    color: #e0e0e0;
+}
+
+body.dark-mode .quantity-btn:hover {
+    background: #333;
+}

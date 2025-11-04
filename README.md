@@ -10,6 +10,10 @@ A full-stack e-commerce store built with Node.js, Express, SQLite, and vanilla J
 - 📊 Order management
 - 💾 SQLite database for data persistence
 - 🎨 Responsive design
+- 🚀 LaunchDarkly feature flags integration
+- 🌙 Dark mode toggle (feature flag)
+- 🎉 Targeted coupon banner (feature flag)
+- 📈 Event tracking for checkout metrics
 
 ## Tech Stack
 
@@ -17,6 +21,7 @@ A full-stack e-commerce store built with Node.js, Express, SQLite, and vanilla J
 - **Database**: SQLite (sqlite3)
 - **Frontend**: HTML, CSS, Vanilla JavaScript
 - **APIs**: RESTful JSON API
+- **Feature Flags**: LaunchDarkly JavaScript SDK
 
 ## Getting Started
 
@@ -32,7 +37,12 @@ A full-stack e-commerce store built with Node.js, Express, SQLite, and vanilla J
 npm install
 ```
 
-2. Start the server:
+2. Configure LaunchDarkly:
+   - Copy `.env.example` to `.env`
+   - Add your LaunchDarkly client-side ID to the `LAUNCHDARKLY_CLIENT_ID` variable
+   - Or update `ldSessionKey` in `public/app.js` (line 10)
+
+3. Start the server:
 ```bash
 npm start
 ```
@@ -42,7 +52,7 @@ For development with auto-reload:
 npm run dev
 ```
 
-3. Open your browser and navigate to:
+4. Open your browser and navigate to:
 ```
 http://localhost:3000
 ```
@@ -65,6 +75,23 @@ http://localhost:3000
 
 ### Session
 - `GET /api/session` - Generate new session ID
+
+## LaunchDarkly Feature Flags
+
+### Implemented Flags
+
+1. **dark-mode** (Boolean)
+   - Toggles dark mode theme for the application
+   - Applied automatically when flag is enabled
+
+2. **coupon-banner** (Boolean)
+   - Shows/hides a 20% off coupon banner at the top of the page
+   - Can be targeted to specific users by email address
+
+### Event Tracking
+
+- **checkout-total**: Tracks the total value of completed checkouts
+  - Metric value: Order total amount
 
 ## Database Schema
 
