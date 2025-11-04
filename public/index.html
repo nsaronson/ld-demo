@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tech Store - E-commerce</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>🛒 Tech Store</h1>
+            <div class="cart-icon" onclick="toggleCart()">
+                <span>🛍️</span>
+                <span class="cart-count" id="cartCount">0</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section id="products">
+            <h2>Our Products</h2>
+            <div id="productGrid" class="product-grid">
+                <div class="loading">Loading products...</div>
+            </div>
+        </section>
+
+        <aside id="cart" class="cart-sidebar">
+            <div class="cart-header">
+                <h2>Shopping Cart</h2>
+                <button class="close-btn" onclick="toggleCart()">✕</button>
+            </div>
+            <div id="cartItems" class="cart-items">
+                <p class="empty-cart">Your cart is empty</p>
+            </div>
+            <div class="cart-footer">
+                <div class="cart-total">
+                    <strong>Total:</strong>
+                    <span id="cartTotal">$0.00</span>
+                </div>
+                <button id="checkoutBtn" class="btn btn-primary" onclick="showCheckout()">
+                    Proceed to Checkout
+                </button>
+            </div>
+        </aside>
+
+        <div id="checkoutModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Checkout</h2>
+                    <button class="close-btn" onclick="closeCheckout()">✕</button>
+                </div>
+                <form id="checkoutForm">
+                    <div class="form-group">
+                        <label for="customerName">Full Name *</label>
+                        <input type="text" id="customerName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="customerEmail">Email *</label>
+                        <input type="email" id="customerEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="customerAddress">Shipping Address *</label>
+                        <textarea id="customerAddress" rows="3" required></textarea>
+                    </div>
+                    <div class="checkout-total">
+                        <strong>Order Total:</strong>
+                        <span id="checkoutTotal">$0.00</span>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Place Order</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="successModal" class="modal">
+            <div class="modal-content success">
+                <h2>✓ Order Placed Successfully!</h2>
+                <p>Your order #<span id="orderId"></span> has been received.</p>
+                <p>Total: <strong id="orderTotal"></strong></p>
+                <p>A confirmation email will be sent shortly.</p>
+                <button class="btn btn-primary" onclick="closeSuccess()">Continue Shopping</button>
+            </div>
+        </div>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
